@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum AnimeType {
+  TV
+  MOVIE
+  OVA
+  ONA
+  SPECIAL
+}
+
+enum AnimeStatus {
+  AIRING
+  FINISHED
+  UPCOMING
+}
+
+enum Season {
+  WINTER
+  SPRING
+  SUMMER
+  FALL
+}
+
+// Models
+model Anime {
+  id            String      @id @default(uuid())
+  slug          String      @unique
+  titleEnglish  String
+  titleRomaji   String?
+  synopsis      String?
+  type          AnimeType   @default(TV)
+  episodeCount  Int?
+  status        AnimeStatus @default(UPCOMING)
+  season        Season?
+  year          Int?
+  posterUrl     String
+  bannerUrl     String?
+  rating        Decimal     @default(0) @db.Decimal(3, 2)
+  ratingCount   Int         @default(0)
+  popularity    Int         @default(0)
+  viewCount     Int         @default(0)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  genres   AnimeGenre[]
+  episodes Episode[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([rating])
+  @@index([popularity])
+  @@map("anime")
+}
+
+model Genre {
+  id    String       @id @default(uuid())
+  name  String       @unique
+  slug  String       @unique
+  anime AnimeGenre[]
+
+  @@map("genres")
+}
+
+model AnimeGenre {
+  animeId String
+  anime   Anime  @relation(fields: [animeId], references: [id], onDelete: Cascade)
+  genreId String
+  genre   Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
+  @@id([animeId, genreId])
+  @@map("anime_genres")
+}
+
+model Episode {
+  id            String   @id @default(uuid())
+  animeId       String
+  anime         Anime    @relation(fields: [animeId], references: [id], onDelete: Cascade)
+  episodeNumber Int
+  title         String?
+  synopsis      String?
+  thumbnailUrl  String?
+  duration      Int?
+  airDate       DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([animeId, episodeNumber])
+  @@index([animeId])
+  @@map("episodes")
+}

@@ -1,0 +1,22 @@
+# render.yaml - Render Blueprint
+services:
+  - type: web
+    name: animevault-api
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: apps/api
+    buildCommand: npm install -g pnpm && pnpm install && pnpm prisma generate && pnpm build
+    startCommand: node dist/main.js
+    healthCheckPath: /api/v1/anime/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: CORS_ORIGIN
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
