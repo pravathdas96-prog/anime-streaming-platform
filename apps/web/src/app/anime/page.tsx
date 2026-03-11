@@ -6,7 +6,9 @@ async function getAnimeList() {
       next: { revalidate: 60 },
     });
     if (!res.ok) throw new Error('Failed to fetch');
-    return res.json();
+    const data = await res.json();
+    if (!data?.data?.length) throw new Error('No anime data');
+    return data;
   } catch (error) {
     return {
       data: [
@@ -119,3 +121,4 @@ export default async function AnimePage() {
     </div>
   );
 }
+
