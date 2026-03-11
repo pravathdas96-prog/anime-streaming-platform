@@ -6,7 +6,7 @@ services:
     region: oregon
     plan: free
     rootDir: apps/api
-    buildCommand: npm install -g pnpm && pnpm install && pnpm prisma generate && pnpm build
+    buildCommand: npm install && npm run build
     startCommand: node dist/main.js
     healthCheckPath: /api/v1/anime/health
     envVars:
@@ -20,3 +20,4 @@ services:
         sync: false
       - key: JWT_SECRET
         generateValue: true
+
