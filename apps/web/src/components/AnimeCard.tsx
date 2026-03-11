@@ -9,6 +9,7 @@ interface AnimeCardProps {
     posterUrl: string;
     rating: number;
     episodes?: number;
+    episodeCount?: number;
     status?: string;
   };
 }
@@ -39,8 +40,8 @@ export function AnimeCard({ anime }: AnimeCardProps) {
             <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
             <span>{anime.rating}</span>
           </div>
-          {anime.episodes && (
-            <span>{anime.episodes} eps</span>
+          {(anime.episodes ?? anime.episodeCount) && (
+            <span>{anime.episodes ?? anime.episodeCount} eps</span>
           )}
         </div>
       </div>
@@ -53,3 +54,4 @@ export function AnimeCard({ anime }: AnimeCardProps) {
     </a>
   );
 }
+

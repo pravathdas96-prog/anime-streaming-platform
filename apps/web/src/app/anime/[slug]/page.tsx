@@ -56,6 +56,9 @@ async function getAnime(slug: string) {
 
 export default async function AnimeDetailPage({ params }: PageProps) {
   const anime = await getAnime(params.slug);
+  const episodeTotal = typeof anime.episodes === 'number'
+    ? anime.episodes
+    : anime.episodeCount ?? anime.episodes?.length ?? 0;
 
   return (
     <div className="min-h-screen">
@@ -99,10 +102,10 @@ export default async function AnimeDetailPage({ params }: PageProps) {
                 <span className="text-gray-400">({anime.ratingCount?.toLocaleString()} reviews)</span>
               </div>
               <span className="text-gray-400">{anime.type}</span>
-              <span className="text-gray-400">{anime.episodes} Episodes</span>
+              <span className="text-gray-400">{episodeTotal} Episodes</span>
               <span className={`px-2 py-1 rounded text-sm ${
-                anime.status === 'AIRING' ? 'bg-green-500/20 text-green-400' : 
-                anime.status === 'FINISHED' ? 'bg-blue-500/20 text-blue-400' : 
+                anime.status === 'AIRING' ? 'bg-green-500/20 text-green-400' :
+                anime.status === 'FINISHED' ? 'bg-blue-500/20 text-blue-400' :
                 'bg-yellow-500/20 text-yellow-400'
               }`}>
                 {anime.status}
@@ -145,7 +148,7 @@ export default async function AnimeDetailPage({ params }: PageProps) {
         <div className="mt-12">
           <h2 className="text-2xl font-bold mb-4">Episodes</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {Array.from({ length: Math.min(anime.episodes || 12, 12) }, (_, i) => (
+            {Array.from({ length: Math.min(episodeTotal || 12, 12) }, (_, i) => (
               <button
                 key={i}
                 className="p-4 bg-card hover:bg-card/80 rounded-lg text-center transition"
@@ -154,7 +157,7 @@ export default async function AnimeDetailPage({ params }: PageProps) {
               </button>
             ))}
           </div>
-          {(anime.episodes || 0) > 12 && (
+          {episodeTotal > 12 && (
             <button className="mt-4 px-6 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition">
               View All Episodes
             </button>
