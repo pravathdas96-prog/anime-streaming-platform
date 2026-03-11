@@ -9,10 +9,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: '#6366f1',
-        secondary: '#8b5cf6',
-        background: '#0f0f0f',
-        card: '#1a1a1a',
+        primary: '#ff6b35',
+        secondary: '#ffd166',
+        background: '#120f0f',
+        card: '#1e1817',
+        muted: '#f3ede6',
+        ink: '#181312',
       },
     },
   },

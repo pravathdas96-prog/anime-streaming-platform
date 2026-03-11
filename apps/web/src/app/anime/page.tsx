@@ -85,35 +85,54 @@ async function getAnimeList() {
 
 export default async function AnimePage() {
   const { data: animeList } = await getAnimeList();
+  const categories = ['Action', 'Adventure', 'Drama', 'Fantasy', 'Supernatural', 'Long-running'];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Browse Anime</h1>
-      
-      {/* Filters */}
-      <div className="flex gap-4 mb-8 flex-wrap">
-        <select className="px-4 py-2 bg-card border border-gray-700 rounded-lg">
+    <div className="container mx-auto py-8">
+      <section className="glass-panel rounded-[32px] px-6 py-8 md:px-10">
+        <p className="text-sm uppercase tracking-[0.3em] text-secondary">Catalog</p>
+        <div className="mt-3 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h1 className="text-4xl font-semibold md:text-5xl">Browse Anime</h1>
+            <p className="mt-3 max-w-2xl text-gray-300">
+              Explore the starter catalog, jump into detail pages, and use the live API as the base for whatever you build next.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {categories.map((category) => (
+              <span key={category} className="rounded-full border border-white/10 px-4 py-2 text-sm text-gray-200">
+                {category}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="mt-8 flex flex-wrap gap-4">
+        <select className="rounded-full border border-white/10 bg-card px-4 py-3 text-sm text-gray-200">
           <option>All Genres</option>
           <option>Action</option>
           <option>Adventure</option>
           <option>Comedy</option>
           <option>Drama</option>
         </select>
-        <select className="px-4 py-2 bg-card border border-gray-700 rounded-lg">
+        <select className="rounded-full border border-white/10 bg-card px-4 py-3 text-sm text-gray-200">
           <option>All Status</option>
           <option>Airing</option>
           <option>Finished</option>
           <option>Upcoming</option>
         </select>
-        <select className="px-4 py-2 bg-card border border-gray-700 rounded-lg">
+        <select className="rounded-full border border-white/10 bg-card px-4 py-3 text-sm text-gray-200">
           <option>Sort: Popularity</option>
           <option>Sort: Rating</option>
           <option>Sort: Recent</option>
         </select>
+        <div className="ml-auto rounded-full border border-primary/30 bg-primary/10 px-5 py-3 text-sm text-primary">
+          {animeList.length} titles ready
+        </div>
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
         {animeList.map((anime: any) => (
           <AnimeCard key={anime.id} anime={anime} />
         ))}
@@ -121,4 +140,3 @@ export default async function AnimePage() {
     </div>
   );
 }
-

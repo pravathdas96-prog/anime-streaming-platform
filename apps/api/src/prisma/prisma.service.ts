@@ -87,6 +87,44 @@ const starterAnime = [
     viewCount: 3000000,
     genreSlugs: ['action', 'adventure', 'comedy'],
   },
+  {
+    slug: 'naruto-shippuden',
+    titleEnglish: 'Naruto Shippuden',
+    titleRomaji: 'Naruto: Shippuuden',
+    synopsis:
+      'Naruto returns stronger, older, and more determined to protect the people he loves while facing the Akatsuki threat.',
+    type: 'TV' as const,
+    episodeCount: 500,
+    status: 'FINISHED' as const,
+    season: 'WINTER' as const,
+    year: 2007,
+    posterUrl: 'https://cdn.myanimelist.net/images/anime/5/17407.jpg',
+    bannerUrl: 'https://cdn.myanimelist.net/images/anime/5/17407.jpg',
+    rating: 8.3,
+    ratingCount: 112000,
+    popularity: 94000,
+    viewCount: 2100000,
+    genreSlugs: ['action', 'adventure', 'drama'],
+  },
+  {
+    slug: 'death-note',
+    titleEnglish: 'Death Note',
+    titleRomaji: 'Death Note',
+    synopsis:
+      'A brilliant student discovers a supernatural notebook and begins a cat-and-mouse battle with the world’s greatest detective.',
+    type: 'TV' as const,
+    episodeCount: 37,
+    status: 'FINISHED' as const,
+    season: 'FALL' as const,
+    year: 2006,
+    posterUrl: 'https://cdn.myanimelist.net/images/anime/9/9453.jpg',
+    bannerUrl: 'https://cdn.myanimelist.net/images/anime/9/9453.jpg',
+    rating: 8.6,
+    ratingCount: 146000,
+    popularity: 97000,
+    viewCount: 2300000,
+    genreSlugs: ['drama', 'fantasy', 'supernatural'],
+  },
 ];
 
 @Injectable()
@@ -101,11 +139,6 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   }
 
   private async ensureStarterData() {
-    const animeCount = await this.anime.count();
-    if (animeCount > 0) {
-      return;
-    }
-
     for (const genre of starterGenres) {
       await this.genre.upsert({
         where: { slug: genre.slug },

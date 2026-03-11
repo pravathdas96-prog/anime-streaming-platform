@@ -15,43 +15,47 @@ interface AnimeCardProps {
 }
 
 export function AnimeCard({ anime }: AnimeCardProps) {
+  const episodeLabel = anime.episodes ?? anime.episodeCount;
+
   return (
     <a
       href={`/anime/${anime.slug}`}
-      className="group relative rounded-lg overflow-hidden bg-card hover:scale-105 transition-transform duration-300"
+      className="group glass-panel relative overflow-hidden rounded-[28px] transition duration-300 hover:-translate-y-2"
     >
-      <div className="aspect-[3/4] relative">
+      <div className="relative aspect-[3/4]">
         <Image
           src={anime.posterUrl}
           alt={anime.titleEnglish}
           fill
-          className="object-cover"
+          className="object-cover transition duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent opacity-80" />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-primary/20 to-transparent opacity-0 transition group-hover:opacity-100" />
       </div>
-      
-      <div className="p-3">
-        <h3 className="font-semibold text-sm line-clamp-2 group-hover:text-primary transition">
+
+      <div className="space-y-3 p-4">
+        <div className="flex items-center justify-between gap-3 text-[11px] uppercase tracking-[0.2em] text-gray-400">
+          <span>{anime.status || 'Catalog'}</span>
+          <span>{episodeLabel ? `${episodeLabel} eps` : 'New drop'}</span>
+        </div>
+        <h3 className="line-clamp-2 text-lg font-semibold transition group-hover:text-primary">
           {anime.titleEnglish}
         </h3>
-        <div className="flex items-center justify-between mt-2 text-xs text-gray-400">
+        <div className="flex items-center justify-between text-sm text-gray-300">
           <div className="flex items-center gap-1">
-            <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
+            <Star className="h-4 w-4 fill-secondary text-secondary" />
             <span>{anime.rating}</span>
           </div>
-          {(anime.episodes ?? anime.episodeCount) && (
-            <span>{anime.episodes ?? anime.episodeCount} eps</span>
-          )}
+          <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-gray-300">View details</span>
         </div>
       </div>
 
       {anime.status === 'AIRING' && (
-        <span className="absolute top-2 left-2 px-2 py-1 bg-green-500 text-xs font-bold rounded">
+        <span className="absolute left-3 top-3 rounded-full bg-emerald-400 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-black">
           AIRING
         </span>
       )}
     </a>
   );
 }
-
