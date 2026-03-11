@@ -32,6 +32,11 @@ export class AnimeController {
     return this.animeService.getPopular(parseInt(limit));
   }
 
+  @Get('health')
+  health() {
+    return { status: 'ok', timestamp: new Date().toISOString() };
+  }
+
   @Get(':slug')
   findOne(@Param('slug') slug: string) {
     return this.animeService.findBySlug(slug);
@@ -40,10 +45,5 @@ export class AnimeController {
   @Get(':slug/episodes')
   getEpisodes(@Param('slug') slug: string) {
     return this.animeService.getEpisodes(slug);
-  }
-
-  @Get('health')
-  health() {
-    return { status: 'ok', timestamp: new Date().toISOString() };
   }
 }

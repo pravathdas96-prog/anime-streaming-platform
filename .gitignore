@@ -34,3 +34,6 @@ coverage/
 # Prisma
 apps/api/prisma/*.db
 apps/api/prisma/*.db-journal
+
+# Local package-manager cache
+.npm-cache/
