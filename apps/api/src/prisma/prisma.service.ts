@@ -106,49 +106,65 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
       return;
     }
 
-    await this.$transaction(async (tx) => {
-      for (const genre of starterGenres) {
-        await tx.genre.upsert({
-          where: { slug: genre.slug },
-          update: {},
-          create: genre,
+    for (const genre of starterGenres) {
+      await this.genre.upsert({
+        where: { slug: genre.slug },
+        update: {},
+        create: genre,
+      });
+    }
+
+    for (const anime of starterAnime) {
+      const { genreSlugs, ...animeFields } = anime;
+
+      let createdAnime = await this.anime.findUnique({
+        where: { slug: anime.slug },
+      });
+
+      if (!createdAnime) {
+        createdAnime = await this.anime.create({
+          data: animeFields,
         });
       }
 
-      for (const anime of starterAnime) {
-        const { genreSlugs, ...animeFields } = anime;
+      for (const slug of genreSlugs) {
+        const existingGenre = await this.genre.findUnique({ where: { slug } });
+        if (!existingGenre) {
+          continue;
+        }
 
-        const createdAnime = await tx.anime.upsert({
-          where: { slug: anime.slug },
-          update: animeFields,
-          create: {
-            ...animeFields,
-            genres: {
-              create: genreSlugs.map((slug) => ({
-                genre: { connect: { slug } },
-              })),
+        await this.animeGenre.upsert({
+          where: {
+            animeId_genreId: {
+              animeId: createdAnime.id,
+              genreId: existingGenre.id,
             },
           },
+          update: {},
+          create: {
+            animeId: createdAnime.id,
+            genreId: existingGenre.id,
+          },
         });
+      }
 
-        for (let episodeNumber = 1; episodeNumber <= Math.min(anime.episodeCount, 12); episodeNumber++) {
-          await tx.episode.upsert({
-            where: {
-              animeId_episodeNumber: {
-                animeId: createdAnime.id,
-                episodeNumber,
-              },
-            },
-            update: {},
-            create: {
+      for (let episodeNumber = 1; episodeNumber <= Math.min(anime.episodeCount, 12); episodeNumber++) {
+        await this.episode.upsert({
+          where: {
+            animeId_episodeNumber: {
               animeId: createdAnime.id,
               episodeNumber,
-              title: `Episode ${episodeNumber}`,
-              duration: 24 * 60,
             },
-          });
-        }
+          },
+          update: {},
+          create: {
+            animeId: createdAnime.id,
+            episodeNumber,
+            title: `Episode ${episodeNumber}`,
+            duration: 24 * 60,
+          },
+        });
       }
-    });
+    }
   }
 }
